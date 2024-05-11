@@ -10,5 +10,5 @@ class Asesoria(BaseModel):
     fecha: datetime
     hora: str
     profesor: str
-    usuario_id: str
+    usuario_id: str # Se me ocurre que podemos mostrar este en pantalla para simplificar
 

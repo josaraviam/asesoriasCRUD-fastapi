@@ -41,15 +41,37 @@ async def find_asesoria_by_id(id: str):
 
 @router.put("/{id}", response_model=Asesoria)
 async def update_asesoria(id: str, asesoria: Asesoria):
+    print(f"Intentando actualizar la asesoría con ID: {id}")  # Depuración para seguir el proceso de actualización
     try:
+        # Verificar si existe alguna otra asesoría para este usuario, fecha y hora, excluyendo la asesoría actual
+        existing_asesoria = await collection_asesorias.find_one({
+            "_id": {"$ne": ObjectId(id)},  # Excluye la asesoría que se está actualizando
+            "usuario_id": asesoria.usuario_id,
+            "fecha": asesoria.fecha,
+            "hora": asesoria.hora
+        })
+        if existing_asesoria:
+            # Si se encuentra una asesoría duplicada, se impide la actualización y se retorna un error
+            print("Conflicto: Ya existe otra asesoría para este usuario a la misma hora y fecha")
+            raise HTTPException(status_code=400, detail="Ya existe una asesoría para este usuario a la misma hora y fecha")
+
+        # Actualizar la asesoría si no se encontró duplicado
         updated_asesoria = await collection_asesorias.find_one_and_update(
-            {"_id": ObjectId(id)}, {"$set": asesoria.dict()}, return_document=True
+            {"_id": ObjectId(id)},
+            {"$set": asesoria.dict()},
+            return_document=True  # Configuración para que MongoDB devuelva el documento actualizado
         )
         if updated_asesoria:
-            return updated_asesoria  # Devolver la asesoría actualizada
-        raise HTTPException(status_code=404, detail="Asesoría no encontrada")
+            print(f"Asesoría actualizada exitosamente: {updated_asesoria}")  # Confirmación de la actualización
+            return updated_asesoria
+        else:
+            # Si no se encuentra la asesoría, se retorna un error indicando que no se encontró
+            print("No se encontró la asesoría con el ID proporcionado para actualizar")
+            raise HTTPException(status_code=404, detail="Asesoría no encontrada")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))  # Manejo de excepciones para errores inesperados
+        # Manejo de cualquier otro tipo de error durante la actualización
+        print(f"Error durante la actualización: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.delete("/{id}", response_model=Asesoria)
 async def delete_asesoria(id: str):
