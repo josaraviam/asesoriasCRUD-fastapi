@@ -1,0 +1,10 @@
+fastapi~=0.110.2
+motor~=3.4.0
+pydantic~=2.7.1
+certifi~=2024.2.2
+uvicorn
+gunicorn
+websockets
+wrapt
+python-dotenv~=1.0.1
+db~=0.1.1
