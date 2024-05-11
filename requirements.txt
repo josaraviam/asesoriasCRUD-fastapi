@@ -7,4 +7,5 @@ gunicorn
 websockets
 wrapt
 python-dotenv~=1.0.1
-db~=0.1.1
+pymongo~=4.7.2
+bcrypt~=4.1.3
