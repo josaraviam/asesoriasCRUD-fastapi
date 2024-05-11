@@ -11,3 +11,4 @@ class Asesoria(BaseModel):
     hora: str
     profesor: str
     usuario_id: str
+
