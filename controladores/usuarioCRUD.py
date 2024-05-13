@@ -39,7 +39,7 @@ async def find_usuario_by_id(id: str):
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
 
-@router.get("/username/{username}", response_model=Usuario)
+@router.get("/username/{username}", response_model=None)
 async def find_id_by_username(username: str):
     usuario = await collection_usuarios.find_one({"username": username})
     if usuario:
