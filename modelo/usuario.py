@@ -3,7 +3,7 @@ from typing import Optional
 
 
 class Usuario(BaseModel):
-    id: Optional[str] = Field(None, alias="_id")
+    id: Optional[str] = None
     nombre: str
     apellido: str
     email: EmailStr
