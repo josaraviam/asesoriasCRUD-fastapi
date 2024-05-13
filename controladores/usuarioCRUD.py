@@ -40,7 +40,7 @@ async def find_usuario_by_id(id: str):
 
 
 @router.get("/username/{username}", response_model=Usuario)
-async def find_usuario_by_username(username: str):
+async def find_id_by_username(username: str):
     usuario = await collection_usuarios.find_one({"username": username})
     if usuario:
         usuario["id"] = str(usuario["_id"])

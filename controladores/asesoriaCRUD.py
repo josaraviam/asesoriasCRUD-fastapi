@@ -1,7 +1,9 @@
 from bson import ObjectId
 from typing import List
 from fastapi import HTTPException, APIRouter
-from db.db import collection_asesorias
+
+from controladores.usuarioCRUD import find_id_by_username
+from db.db import collection_asesorias, collection_usuarios
 from modelo.asesoria import Asesoria
 
 router = APIRouter()
@@ -30,7 +32,11 @@ async def read_asesorias():
 
 @router.get("/by-username/{username}", response_description="Listar asesorías por nombre de usuario", response_model=List[Asesoria])
 async def read_asesorias_by_username(username: str):
-    asesorias = await collection_asesorias.find({"username": username}).to_list(100)
+    user_id = await find_id_by_username(username)
+    if not user_id:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    asesorias = await collection_asesorias.find({"usuario_id": user_id}).to_list(100)
     for asesoria in asesorias:
         asesoria["id"] = str(asesoria["_id"])  # Convertir ObjectId a string para cada asesoría
     return asesorias
