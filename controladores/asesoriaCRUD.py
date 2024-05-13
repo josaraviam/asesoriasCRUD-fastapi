@@ -28,6 +28,13 @@ async def read_asesorias():
         asesoria["id"] = str(asesoria["_id"])  # Convertir ObjectId a string para cada asesoría
     return asesorias
 
+@router.get("/by-username/{username}", response_description="Listar asesorías por nombre de usuario", response_model=List[Asesoria])
+async def read_asesorias_by_username(username: str):
+    asesorias = await collection_asesorias.find({"username": username}).to_list(100)
+    for asesoria in asesorias:
+        asesoria["id"] = str(asesoria["_id"])  # Convertir ObjectId a string para cada asesoría
+    return asesorias
+
 @router.get("/{id}", response_model=Asesoria)
 async def find_asesoria_by_id(id: str):
     try:
