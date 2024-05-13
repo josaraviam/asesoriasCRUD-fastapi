@@ -43,8 +43,7 @@ async def find_usuario_by_id(id: str):
 async def find_id_by_username(username: str):
     usuario = await collection_usuarios.find_one({"username": username})
     if usuario:
-        usuario["id"] = str(usuario["_id"])
-        return usuario
+        return str(usuario["_id"])
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
 
