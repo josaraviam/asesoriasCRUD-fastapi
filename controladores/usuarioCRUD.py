@@ -39,13 +39,20 @@ async def find_usuario_by_id(id: str):
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
 
-@router.get("/username/{username}", response_model=None)
+@router.get("/username/{username}", response_model=Usuario)
+async def find_user_by_username(username: str):
+    usuario = await collection_usuarios.find_one({"username": username})
+    if usuario:
+        usuario["id"] = str(usuario["_id"])
+        return usuario
+    raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+@router.get("/userid/{username}", response_model=None)
 async def find_id_by_username(username: str):
     usuario = await collection_usuarios.find_one({"username": username})
     if usuario:
-        return str(usuario["_id"])
+        return {"id": str(usuario["_id"])}
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
-
 
 @router.put("/{id}", response_model=Usuario)
 async def update_usuario(id: str, usuario: Usuario):
