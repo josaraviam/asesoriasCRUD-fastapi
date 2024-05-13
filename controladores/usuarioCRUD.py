@@ -51,7 +51,7 @@ async def find_usuario_by_username(username: str):
 async def find_id_by_username(username: str):
     usuario = await collection_usuarios.find_one({"username": username})
     if usuario:
-        return {"id": str(usuario["_id"])}
+        return str(usuario["_id"])  # Devolver solo el ID como cadena
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
 @router.put("/{id}", response_model=Usuario)
